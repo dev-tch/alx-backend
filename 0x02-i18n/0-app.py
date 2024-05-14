@@ -6,12 +6,8 @@ app = Flask(__name__)
 
 @app.route('/', strict_slashes=False)
 def hello_world():
-    """render message to index.html"""
-    header_msg = "Hello world"
-    title_msg = "Welcome to Holberton"
-    return render_template('0-index.html',
-                           title_msg=title_msg,
-                           header_msg=header_msg)
+    """render htm page  index"""
+    return render_template('0-index.html')
 
 
 if __name__ == "__main__":
