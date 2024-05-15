@@ -28,7 +28,7 @@ users = {
 
 def get_user() -> Union[Dict, None]:
     """ return user associated for table users"""
-    id_user: str = request.args.get('login_as', None)
+    id_user = request.args.get('login_as', None)
     try:
         if id_user is not None and isinstance((index := int(id_user)), int):
             return users.get(index, None)
@@ -60,4 +60,4 @@ def hello_world() -> str:
 
 if __name__ == "__main__":
     """ Main Flask """
-    app.run(host='0.0.0.0', port=5000)
+    app.run()
