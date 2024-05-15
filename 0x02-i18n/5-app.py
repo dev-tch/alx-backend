@@ -32,10 +32,11 @@ def get_user() -> Union[Dict, None]:
     id_user = request.args.get('login_as', None)
     try:
         index = int(id_user)
-        if id_user is not None and isinstance(index, int):
+        if isinstance(index, int):
             return users.get(index, None)
-    except ValueError:
+    except (ValueError, TypeError):
         return None
+    return None
 
 
 @app.before_request
