@@ -15,6 +15,7 @@ class Config:
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.url_map.strict_slashes = False
 babel = Babel(app)
 
 
@@ -52,7 +53,7 @@ def get_locale() -> str:
         return request.accept_languages.best_match(Config.LANGUAGES)
 
 
-@app.route('/', strict_slashes=False)
+@app.route('/')
 def hello_world() -> str:
     """render htm page  5-index"""
     return render_template('5-index.html')
@@ -60,4 +61,4 @@ def hello_world() -> str:
 
 if __name__ == "__main__":
     """ Main Flask """
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
