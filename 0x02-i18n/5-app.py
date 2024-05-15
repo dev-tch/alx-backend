@@ -6,24 +6,6 @@ from flask import request
 from typing import (Union, Dict)
 
 
-users = {
-    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
-    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
-    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
-    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
-}
-
-
-def get_user() -> Union[Dict[str, str], None]:
-    """ return user associated for table users"""
-    id_user: str = request.args.get('login_as', None)
-    try:
-        if id_user is not None and isinstance((index := int(id_user)), int):
-            return users.get(index, None)
-    except ValueError:
-        return None
-
-
 class Config:
     """ class to config Babel"""
     LANGUAGES = ["en", "fr"]
@@ -36,16 +18,32 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
+users = {
+    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
+    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
+    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
+    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
+}
+
+
+def get_user() -> Union[Dict, None]:
+    """ return user associated for table users"""
+    id_user: str = request.args.get('login_as', None)
+    try:
+        if id_user is not None and isinstance((index := int(id_user)), int):
+            return users.get(index, None)
+    except ValueError:
+        return None
+
+
 @app.before_request
-def before_request():
+def before_request() -> None:
     """ decorator excuted before request action to save user data"""
-    user = get_user()
-    if user is not None and isinstance(user, Dict) and "name" in user:
-        setattr(g, 'user', user)
+    g.user = get_user()
 
 
 @babel.localeselector
-def get_locale():
+def get_locale() -> str:
     """get the languague used for translation"""
     locale_param = request.args.get('locale', None)
     if locale_param is not None and locale_param in Config.LANGUAGES:
@@ -55,7 +53,7 @@ def get_locale():
 
 
 @app.route('/', strict_slashes=False)
-def hello_world():
+def hello_world() -> str:
     """render htm page  5-index"""
     return render_template('5-index.html')
 
