@@ -3,7 +3,7 @@
 from flask import Flask, render_template, g
 from flask_babel import Babel
 from flask import request
-from typing import (Union, Dict)
+from typing import Union, Dict
 
 
 class Config:
@@ -31,7 +31,8 @@ def get_user() -> Union[Dict, None]:
     """ return user associated for table users"""
     id_user = request.args.get('login_as', None)
     try:
-        if id_user is not None and isinstance((index := int(id_user)), int):
+        index = int(id_user)
+        if id_user is not None and isinstance(index, int):
             return users.get(index, None)
     except ValueError:
         return None
