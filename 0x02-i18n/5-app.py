@@ -55,13 +55,9 @@ def get_locale():
 
 
 @app.route('/', strict_slashes=False)
-@app.route('/<locale>', strict_slashes=False)
-@app.route('/<login_as>', strict_slashes=False)
 def hello_world():
     """render htm page  5-index"""
-    user = getattr(g, 'user', None)
-    username = user["name"] if user is not None else ""
-    return render_template('5-index.html', username=username)
+    return render_template('5-index.html')
 
 
 if __name__ == "__main__":
