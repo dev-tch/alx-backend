@@ -14,8 +14,9 @@ users = {
 }
 
 
-def get_user(id_user: str) -> Union[Dict[str, str], None]:
+def get_user() -> Union[Dict[str, str], None]:
     """ return user associated for table users"""
+    id_user: str = request.args.get('login_as', None)
     try:
         if id_user is not None and isinstance((index := int(id_user)), int):
             return users.get(index, None)
@@ -38,10 +39,9 @@ babel = Babel(app)
 @app.before_request
 def before_request():
     """ decorator excuted before request action to save user data"""
-    id_user: str = request.args.get('login_as', None)
-    user = get_user(id_user)
+    user = get_user()
     if user is not None and isinstance(user, Dict) and "name" in user:
-        setattr(g, 'login_as', user)
+        setattr(g, 'user', user)
 
 
 @babel.localeselector
@@ -59,7 +59,7 @@ def get_locale():
 @app.route('/<login_as>', strict_slashes=False)
 def hello_world():
     """render htm page  5-index"""
-    user = getattr(g, 'login_as', None)
+    user = getattr(g, 'user', None)
     username = user["name"] if user is not None else ""
     return render_template('5-index.html', username=username)
 
